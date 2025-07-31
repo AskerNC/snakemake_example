@@ -1,0 +1,21 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count
+-----  -------
+all          1
+total        1
+
+Select jobs to execute...
+Execute 1 jobs...
+RuleException in rule all in file "C:\Users\hms467\github\snakemake_example\Snakefile", line 15:
+NameError: The name 'configfile' is unknown in this context. Please make sure that you defined that variable. Also note that braces not used for variable access have to be escaped by repeating them, i.e. {{print $1}}, when formatting the following:
+
+        snakemake --report {output.report} --configfile {configfile} 
+
+        snakemake --forceall --dag |dot -Tpdf > {output.dag}
+        

@@ -1,0 +1,9 @@
+Building DAG of jobs...
+Creating report...
+Missing metadata for file report.html. Maybe metadata was deleted or it was created using an older version of Snakemake. This is a non critical warning.
+Missing metadata for file dag.pdf. Maybe metadata was deleted or it was created using an older version of Snakemake. This is a non critical warning.
+Loading script code for rule shocks
+Loading script code for rule simulate
+Loading script code for rule tables
+Loading script code for rule estimate
+Report created.

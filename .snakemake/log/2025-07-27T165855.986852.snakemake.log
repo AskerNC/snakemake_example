@@ -1,0 +1,24 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job            count
+-----------  -------
+make_report        1
+total              1
+
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 16:58:56 2025]
+localrule make_report:
+    output: report.html
+    jobid: 0
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Sun Jul 27 16:58:58 2025]
+Finished jobid: 0 (Rule: make_report)
+1 of 1 steps (100%) done
+Complete log(s): C:\Users\hms467\github\snakemake_example\.snakemake\log\2025-07-27T165855.986852.snakemake.log

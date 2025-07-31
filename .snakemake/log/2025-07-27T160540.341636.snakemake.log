@@ -1,0 +1,54 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count
+-----  -------
+all          1
+total        1
+
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 16:05:40 2025]
+localrule all:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt
+    output: report.html, dag.pdf
+    jobid: 0
+    reason: Missing output files: dag.pdf, report.html
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+
+RuleException:
+CalledProcessError in file "C:\Users\hms467\github\snakemake_example\Snakefile", line 24:
+Command 'snakemake --forceall --dag |dot -Tpdf > dag.pdf && snakemake --report report.html' returned non-zero exit status 1.
+[Sun Jul 27 16:05:44 2025]
+Error in rule all:
+    message: None
+    jobid: 0
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt
+    output: report.html, dag.pdf
+    shell:
+        
+        snakemake --forceall --dag |dot -Tpdf > dag.pdf && snakemake --report report.html
+        
+        (command exited with non-zero exit code)
+Removing output files of failed job all since they might be corrupted:
+dag.pdf
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look below for error messages
+[Sun Jul 27 16:05:44 2025]
+Error in rule all:
+    message: None
+    jobid: 0
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt
+    output: report.html, dag.pdf
+    shell:
+        
+        snakemake --forceall --dag |dot -Tpdf > dag.pdf && snakemake --report report.html
+        
+        (command exited with non-zero exit code)
+Complete log(s): C:\Users\hms467\github\snakemake_example\.snakemake\log\2025-07-27T160540.341636.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

@@ -1,0 +1,84 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job            count
+-----------  -------
+all                1
+make_dag           1
+make_report        1
+total              3
+
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 16:57:44 2025]
+localrule make_dag:
+    output: dag.pdf
+    jobid: 9
+    reason: Missing output files: dag.pdf; Set of input files has changed since last execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+Select jobs to execute...
+[Sun Jul 27 16:57:46 2025]
+Finished jobid: 9 (Rule: make_dag)
+1 of 3 steps (33%) done
+Execute 1 jobs...
+[Sun Jul 27 16:57:46 2025]
+localrule make_report:
+    output: report.html
+    jobid: 8
+    reason: Missing output files: report.html; Set of input files has changed since last execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Sun Jul 27 16:57:49 2025]
+Finished jobid: 8 (Rule: make_report)
+2 of 3 steps (67%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 16:57:49 2025]
+localrule all:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt, report.html, dag.pdf
+    jobid: 0
+    reason: Input files updated by another job: report.html, dag.pdf
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Sun Jul 27 16:57:49 2025]
+Finished jobid: 0 (Rule: all)
+3 of 3 steps (100%) done
+Traceback (most recent call last):
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\cli.py", line 2165, in args_to_api
+    dag_api.execute_workflow(
+    ~~~~~~~~~~~~~~~~~~~~~~~~^
+        executor=args.executor,
+        ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<48 lines>...
+        executor_settings=executor_settings,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\api.py", line 603, in execute_workflow
+    workflow.execute(
+    ~~~~~~~~~~~~~~~~^
+        executor_plugin=executor_plugin,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        executor_settings=executor_settings,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        updated_files=updated_files,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\workflow.py", line 1415, in execute
+    self.dag.cleanup_workdir()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\dag.py", line 324, in cleanup_workdir
+    os.removedirs(io_dir)
+    ~~~~~~~~~~~~~^^^^^^^^
+
+  File "<frozen os>", line 245, in removedirs
+
+PermissionError: [WinError 5] Access is denied: 'C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output'
+

@@ -1,0 +1,7 @@
+dgp:
+  n_obs: 1000
+  seed: 42
+  constant: 0.5
+
+analysis:
+  model: "ols"

@@ -1,0 +1,26 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count
+-----  -------
+all          1
+total        1
+
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 16:03:44 2025]
+localrule all:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt
+    output: report.html
+    jobid: 0
+    reason: Missing output files: report.html
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+
+[Sun Jul 27 16:03:47 2025]
+Finished jobid: 0 (Rule: all)
+1 of 1 steps (100%) done
+Complete log(s): C:\Users\hms467\github\snakemake_example\.snakemake\log\2025-07-27T160344.353985.snakemake.log

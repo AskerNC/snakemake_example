@@ -1,0 +1,117 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job               count
+--------------  -------
+all                   1
+compile_md            1
+compile_tex           1
+estimate              1
+shocks                1
+simulate              1
+stata_analysis        1
+tables                1
+total                 8
+
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 17:08:46 2025]
+localrule simulate:
+    output: C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output/sim_data.csv
+    jobid: 4
+    reason: Code has changed since last execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Sun Jul 27 17:08:48 2025]
+Finished jobid: 4 (Rule: simulate)
+1 of 8 steps (12%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 17:08:48 2025]
+localrule shocks:
+    input: C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output/sim_data.csv, C:/Users/hms467/github/snakemake_example/dgp/add_shocks/code/shocks_funcs.py
+    output: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv
+    jobid: 3
+    reason: Input files updated by another job: C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output/sim_data.csv
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Sun Jul 27 17:08:50 2025]
+Finished jobid: 3 (Rule: shocks)
+2 of 8 steps (25%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 17:08:50 2025]
+localrule stata_analysis:
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/code/stata_analysis.do
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+    jobid: 2
+    reason: Input files updated by another job: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+Select jobs to execute...
+[Sun Jul 27 17:08:51 2025]
+Finished jobid: 2 (Rule: stata_analysis)
+3 of 8 steps (38%) done
+Execute 1 jobs...
+[Sun Jul 27 17:08:51 2025]
+localrule estimate:
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv
+    output: C:/Users/hms467/github/snakemake_example/analysis/estimate_model/output/estimates.txt
+    jobid: 7
+    reason: Input files updated by another job: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+Select jobs to execute...
+[Sun Jul 27 17:08:54 2025]
+Finished jobid: 7 (Rule: estimate)
+4 of 8 steps (50%) done
+Execute 1 jobs...
+[Sun Jul 27 17:08:54 2025]
+localrule tables:
+    input: C:/Users/hms467/github/snakemake_example/analysis/estimate_model/output/estimates.txt
+    output: C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt
+    jobid: 6
+    reason: Input files updated by another job: C:/Users/hms467/github/snakemake_example/analysis/estimate_model/output/estimates.txt
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+Select jobs to execute...
+[Sun Jul 27 17:08:55 2025]
+Finished jobid: 6 (Rule: tables)
+5 of 8 steps (62%) done
+Execute 1 jobs...
+[Sun Jul 27 17:08:55 2025]
+localrule compile_tex:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.tex
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf
+    jobid: 5
+    reason: Input files updated by another job: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+    wildcards: folder=C:/Users/hms467/github/snakemake_example/analysis/stata_analysis, filename=stata_results_tex
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+Select jobs to execute...
+[Sun Jul 27 17:08:56 2025]
+Finished jobid: 5 (Rule: compile_tex)
+6 of 8 steps (75%) done
+Execute 1 jobs...
+[Sun Jul 27 17:08:56 2025]
+localrule compile_md:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.md
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf
+    jobid: 1
+    reason: Input files updated by another job: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+    wildcards: folder=C:/Users/hms467/github/snakemake_example/analysis/stata_analysis, filename=stata_results_md
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Sun Jul 27 17:08:59 2025]
+Finished jobid: 1 (Rule: compile_md)
+7 of 8 steps (88%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 17:08:59 2025]
+localrule all:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt
+    output: report.html
+    jobid: 0
+    reason: Input files updated by another job: C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Sun Jul 27 17:09:01 2025]
+Finished jobid: 0 (Rule: all)
+8 of 8 steps (100%) done
+Complete log(s): C:\Users\hms467\github\snakemake_example\.snakemake\log\2025-07-27T170845.772047.snakemake.log

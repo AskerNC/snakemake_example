@@ -1,0 +1,61 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count
+-----  -------
+all          1
+total        1
+
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 17:06:27 2025]
+localrule all:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt
+    output: report.html
+    jobid: 0
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Sun Jul 27 17:06:29 2025]
+Finished jobid: 0 (Rule: all)
+1 of 1 steps (100%) done
+Traceback (most recent call last):
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\cli.py", line 2165, in args_to_api
+    dag_api.execute_workflow(
+    ~~~~~~~~~~~~~~~~~~~~~~~~^
+        executor=args.executor,
+        ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<48 lines>...
+        executor_settings=executor_settings,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\api.py", line 603, in execute_workflow
+    workflow.execute(
+    ~~~~~~~~~~~~~~~~^
+        executor_plugin=executor_plugin,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        executor_settings=executor_settings,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        updated_files=updated_files,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\workflow.py", line 1415, in execute
+    self.dag.cleanup_workdir()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\dag.py", line 324, in cleanup_workdir
+    os.removedirs(io_dir)
+    ~~~~~~~~~~~~~^^^^^^^^
+
+  File "<frozen os>", line 245, in removedirs
+
+PermissionError: [WinError 5] Access is denied: 'C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output'
+

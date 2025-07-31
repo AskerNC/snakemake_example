@@ -1,0 +1,79 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job               count
+--------------  -------
+all                   1
+compile_md            1
+compile_tex           1
+estimate              1
+shocks                1
+simulate              1
+stata_analysis        1
+tables                1
+total                 8
+
+Select jobs to execute...
+Execute 1 jobs...
+[Sun Jul 27 17:03:36 2025]
+localrule simulate:
+    output: C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output/sim_data.csv
+    jobid: 3
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+RuleException:
+CalledProcessError in file "C:\Users\hms467\github\snakemake_example\rules\dgp.smk", line 11:
+Command 'C:/Users/hms467/Anaconda3/envs/a313_snake/python.exe "C:\Users\hms467\github\snakemake_example\.snakemake\scripts\tmpc8up7cfo.simulate.py"' returned non-zero exit status 1.
+[Sun Jul 27 17:03:36 2025]
+Error in rule simulate:
+    message: None
+    jobid: 3
+    output: C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output/sim_data.csv
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look below for error messages
+[Sun Jul 27 17:03:36 2025]
+Error in rule simulate:
+    message: None
+    jobid: 3
+    output: C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output/sim_data.csv
+Traceback (most recent call last):
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\cli.py", line 2165, in args_to_api
+    dag_api.execute_workflow(
+    ~~~~~~~~~~~~~~~~~~~~~~~~^
+        executor=args.executor,
+        ^^^^^^^^^^^^^^^^^^^^^^^
+    ...<48 lines>...
+        executor_settings=executor_settings,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\api.py", line 603, in execute_workflow
+    workflow.execute(
+    ~~~~~~~~~~~~~~~~^
+        executor_plugin=executor_plugin,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        executor_settings=executor_settings,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        updated_files=updated_files,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\workflow.py", line 1415, in execute
+    self.dag.cleanup_workdir()
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+
+  File "C:\Users\hms467\Anaconda3\envs\a313_snake\Lib\site-packages\snakemake\dag.py", line 324, in cleanup_workdir
+    os.removedirs(io_dir)
+    ~~~~~~~~~~~~~^^^^^^^^
+
+  File "<frozen os>", line 245, in removedirs
+
+PermissionError: [WinError 5] Access is denied: 'C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output'
+

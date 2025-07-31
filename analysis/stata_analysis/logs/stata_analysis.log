@@ -1,0 +1,89 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\hms467\github\snakemake_example\analysis\stata_analysis\l
+> ogs\stata_analysis.log
+  log type:  text
+ opened on:  27 Jul 2025, 19:17:08
+
+. 
+. * Load CSV data
+. import delimited "`input_file'", clear
+(encoding automatically selected: ISO-8859-1)
+(2 vars, 1,000 obs)
+
+. 
+. 
+. 
+. * Basic descriptives
+. describe
+
+Contains data
+ Observations:         1,000                  
+    Variables:             2                  
+-------------------------------------------------------------------------------
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+-------------------------------------------------------------------------------
+x               float   %9.0g                 
+y               float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. 
+. 
+. 
+. summarize
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+           x |      1,000    .4971778    .2915857   .0012331   .9991047
+           y |      1,000    1.008496    .2893427   .5005187   1.499422
+
+. 
+. 
+. 
+. 
+. su
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+           x |      1,000    .4971778    .2915857   .0012331   .9991047
+           y |      1,000    1.008496    .2893427   .5005187   1.499422
+
+. 
+. 
+. * Create summary statistics table using estpost
+. estpost summarize
+
+             |  e(count)   e(sum_w)    e(mean)     e(Var)      e(sd) 
+-------------+-------------------------------------------------------
+           x |      1000       1000   .4971778   .0850222   .2915857 
+           y |      1000       1000   1.008496   .0837192   .2893427 
+
+             |    e(min)     e(max)     e(sum) 
+-------------+---------------------------------
+           x |  .0012331   .9991047   497.1778 
+           y |  .5005187   1.499422   1008.496 
+
+. esttab using "`output_file'", replace ///
+>     cells("count(fmt(0)) mean(fmt(3)) sd(fmt(3)) min(fmt(3)) max(fmt(3))") //
+> /
+>     label title("Summary Statistics") ///
+>     addnotes("Notes: This table shows descriptive statistics for all variable
+> s.") ///
+>     booktabs
+(file
+    C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/s
+    > tata_results.tex not found)
+(output written to C:/Users/hms467/github/snakemake_example/analysis/stata_anal
+> ysis/output/stata_results.tex)
+
+. 
+. display "Summary statistics exported to: `output_file'"
+Summary statistics exported to: C:/Users/hms467/github/snakemake_example/analys
+> is/stata_analysis/output/stata_results.tex
+
+. 
+. 
+. cap log close

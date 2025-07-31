@@ -1,0 +1,7 @@
+project_setup.py
+pyproject.toml
+snakemake_example.egg-info/PKG-INFO
+snakemake_example.egg-info/SOURCES.txt
+snakemake_example.egg-info/dependency_links.txt
+snakemake_example.egg-info/requires.txt
+snakemake_example.egg-info/top_level.txt

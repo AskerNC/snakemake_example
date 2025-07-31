@@ -1,0 +1,38 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{float}
+
+% Set page margins
+\geometry{
+    top=1in,
+    bottom=1in,
+    left=1in,
+    right=1in
+}
+
+\title{Stata Analysis Results}
+\author{Generated from Snakemake Pipeline}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+This document presents the results from the Stata analysis conducted as part of the Snakemake pipeline. The following table shows the summary statistics generated from the analysis.
+
+\section{Results}
+
+\input{output/stata_results.tex}
+
+\section{Conclusion}
+
+The above table presents the descriptive statistics for the variables x and y in our dataset. The analysis shows that both variables are approximately centered around zero with standard deviations close to 1, suggesting they may be standardized or normalized variables.
+
+\end{document}
