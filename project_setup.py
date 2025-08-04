@@ -207,11 +207,22 @@ def create_paths() -> SimpleNamespace:
         setattr(paths, themename, themefolder)
         
         subfolders = find_all_folders(themefolder)
-        for subfolder in subfolders:
-            setattr(paths, subfolder.name, subfolder / "output")
-            setattr(paths, subfolder.name + "_code", subfolder / "code")
-            setattr(paths, subfolder.name + "_logs", subfolder / "logs")
-    
+        i = 0
+        while i < len(subfolders):
+            subfolder = subfolders[i]
+            sub_subfolders = find_all_folders(subfolder)
+            if 'code' in [sub_subfolder.name for sub_subfolder in sub_subfolders]:
+                # If the subfolder has a code folder, assume it is a code folder
+                setattr(paths, subfolder.name, subfolder / "output")
+                setattr(paths, subfolder.name + "_code", subfolder / "code")
+                setattr(paths, subfolder.name + "_logs", subfolder / "logs")
+            else:
+                # Otherwise, assume it contains multiple folders who each have their own output, code and logs folders
+                setattr(paths, subfolder.name, subfolder)
+                subfolders.extend(sub_subfolders)
+
+            i += 1
+
     # Add other folders and all their subfolders
     for folder in ['rules','utils']:
         folder_path = paths.root / folder

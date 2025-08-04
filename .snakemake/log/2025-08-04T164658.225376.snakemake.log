@@ -1,0 +1,38 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job         count
+--------  -------
+all             1
+make_dag        1
+total           2
+
+Select jobs to execute...
+Execute 1 jobs...
+[Mon Aug  4 16:46:59 2025]
+localrule make_dag:
+    input: Snakefile, C:/Users/hms467/github/snakemake_example/rules/dgp.smk, C:/Users/hms467/github/snakemake_example/rules/analysis.smk, C:/Users/hms467/github/snakemake_example/config.yaml, project_setup.py
+    output: dag.pdf
+    jobid: 8
+    reason: Updated input files: project_setup.py
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Mon Aug  4 16:47:05 2025]
+Finished jobid: 8 (Rule: make_dag)
+1 of 2 steps (50%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Mon Aug  4 16:47:05 2025]
+localrule all:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt, dag.pdf
+    output: report.html
+    jobid: 0
+    reason: Input files updated by another job: dag.pdf
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Mon Aug  4 16:47:07 2025]
+Finished jobid: 0 (Rule: all)
+2 of 2 steps (100%) done
+Complete log(s): C:\Users\hms467\github\snakemake_example\.snakemake\log\2025-08-04T164658.225376.snakemake.log
