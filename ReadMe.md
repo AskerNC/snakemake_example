@@ -115,30 +115,48 @@ Stata scripts are integrated through the `run_stata()` function in `project_setu
 
 1. **Rule Definition**: Stata rules in `analysis.smk` use the `run:` directive instead of `script:`
 2. **Function Call**: `project_setup.run_stata(dofile, args)` is called with the do-file path and arguments
-3. **Argument Passing**: Arguments are passed as command-line parameters to the Stata script, these are read by STATA as local macros with names 1, 2, 3, etc.
-   the do file then uses the args command to name them.
-4. **Local Variables**: A locals file is automatically created for direct Stata execution. (So you need to run stata through snakemake to create it).
+3. **Locals File Generation**: A locals file (`*_locals.do`) is automatically created in the same directory as the do-file, containing all input/output paths and other parameters as local macros
+4. **Dual Mode Support**: The locals file enables seamless switching between running through snakemake and direct Stata execution
 
 ### Stata Script Pattern:
 
-```stata
-* Check if running through Snakemake or directly
-if missing(`"`1'"'){
-    * Not running through Snakemake, use default paths
-    include "stata_analysis_locals.do"
-}
+The new pattern uses an `include` statement to load the automatically generated locals file:
 
-args logfile input_file output_file
+```stata
+clear all
+set more off
+
+* Load locals file with paths and parameters
+include "`1'stata_analysis_locals.do"
+
 log using "`logfile'", replace
 
-* Your Stata code here using `input_file' and `output_file'
+* Your Stata code here using local macros like `input_file' and `output_file'
+```
+
+### Locals File Generation:
+
+The `run_stata()` function automatically creates a locals file (e.g., `stata_analysis_locals.do`) containing:
+- **File paths**: All input and output file paths as local macros
+- **Log file path**: Automatically generated log file path
+- **ADO paths**: Automatically adds custom ADO file directories to the adopath
+
+Example generated locals file:
+```stata
+local logfile "C:\...\analysis\stata_analysis\logs\stata_analysis.log"
+local sim_data_shocked "C:/.../dgp/add_shocks/output/sim_data_shocked.csv"
+local stata_results "C:/.../analysis/stata_analysis/output/stata_results.tex"
+adopath ++ "C:\...\utils\ado_files"
 ```
 
 ### Key Features:
 
-- **Dual Mode Support**: Stata scripts work both when called by snakemake and when run directly
-- **Automatic Logging**: Log files are automatically managed.
-- **Path Consistency**: Input and output paths are passed as arguments from the snakefile, ensuring consistency with Python components
+- **Simplified Locals Loading**: Uses `include` statement to load a comprehensive locals file instead of command-line arguments
+- **Automatic Locals File Creation**: The locals file is automatically generated with all necessary paths and parameters
+- **Dual Mode Support**: Stata scripts work both when called by snakemake and when run directly (the locals file provides the necessary paths for direct execution)
+- **Automatic Logging**: Log files are automatically managed and paths are included in the locals file
+- **Path Consistency**: All input and output paths are consistently available as local macros, ensuring compatibility between Python and Stata components
+- **ADO Path Management**: Custom ADO file directories are automatically added to the adopath in the locals file
 
 ## Wildcard Rules for Document Generation
 

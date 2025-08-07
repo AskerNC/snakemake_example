@@ -358,7 +358,7 @@ def find_snakemake(rulename : str = '',caller_frame : None | FrameType = None ) 
 
 
 
-def run_stata(dofile, args={},logfilename='',ado_files: None|list = None) -> None:
+def run_stata(dofile, args={},logfilename='',ado_files: None|list|str = None) -> None:
     import stata_setup
     stata_setup.config(r'C:\Program Files\Stata18/', 'mp')
     from pystata import stata # type: ignore
@@ -385,6 +385,8 @@ def run_stata(dofile, args={},logfilename='',ado_files: None|list = None) -> Non
             f.write(f'local {key} "{value}"\n')
 
         if ado_files:
+            if type(ado_files) is str:
+                ado_files = [ado_files]
             
             dirs = {str(Path(f).parent) for f in ado_files}   # unique dirs
             for d in dirs:
