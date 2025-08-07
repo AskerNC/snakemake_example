@@ -25,7 +25,9 @@ def create_paths_and_files() -> tuple[SimpleNamespace, SimpleNamespace]:
     files.config = paths.root / "config.yaml"
     files.dgp_smk = paths.rules / "dgp.smk"
     files.analysis_smk = paths.rules / "analysis.smk"
-    
+
+    files.ado_example = paths.ado_files / "ado_example.ado"
+
     
     # Dgp files 
     files.sim_data = paths.simulate_baseline / "sim_data.csv"
@@ -356,27 +358,40 @@ def find_snakemake(rulename : str = '',caller_frame : None | FrameType = None ) 
 
 
 
-def run_stata(dofile, args='',logfilename=''):
+def run_stata(dofile, args={},logfilename='',ado_files: None|list = None) -> None:
     import stata_setup
     stata_setup.config(r'C:\Program Files\Stata18/', 'mp')
     from pystata import stata # type: ignore
     dofile = Path(dofile)
     
+
+    
+    
     if logfilename=='':
         logfilename = f'{dofile.stem}'
     logfile = dofile.parent.parent / 'logs' / f'{logfilename}.log'
+
+    
+    ## Not plan: make the locals file also name the locals explicitly
+    # the just run the local do file before running the do file
 
     # Write a locals file with args in the do file's directory for when running through stata directly 
     locals_file = dofile.parent / f'{dofile.stem}_locals.do'
 
     with open(locals_file, 'w') as f:
-        f.write(f'local 1 "{logfile}"\n')
-        i = 2
-        for arg in args.split():
-            f.write(f'local {i} "{arg}"\n')
-            i += 1
-    
-    return stata.run(f'do "{dofile}" {logfile} {args}')
+        f.write(f'local logfile "{logfile}"\n')
+
+        for key,value in args.items():
+            f.write(f'local {key} "{value}"\n')
+
+        if ado_files:
+            
+            dirs = {str(Path(f).parent) for f in ado_files}   # unique dirs
+            for d in dirs:
+                # Note: this simply adds the path of the ado files, so any ado file from that path can technically be used
+                f.write(f'adopath ++ "{d}"\n')     # project ado wins over SSC
+
+    return stata.run(fr'do "{dofile}" "{dofile.parent}\\"', )
 
 
 class ProjectRootNotFoundError(FileNotFoundError):

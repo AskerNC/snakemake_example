@@ -1,0 +1,124 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 5
+Rules claiming more threads will be scaled down.
+Job stats:
+job               count
+--------------  -------
+all                   1
+compile_md            1
+compile_tex           1
+estimate              1
+make_dag              1
+shocks                1
+simulate              1
+stata_analysis        1
+tables                1
+total                 9
+
+Select jobs to execute...
+Execute 2 jobs...
+[Thu Aug  7 22:12:43 2025]
+localrule simulate:
+    output: C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output/sim_data.csv
+    jobid: 3
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Thu Aug  7 22:12:43 2025]
+localrule make_dag:
+    input: Snakefile, C:/Users/hms467/github/snakemake_example/rules/dgp.smk, C:/Users/hms467/github/snakemake_example/rules/analysis.smk, C:/Users/hms467/github/snakemake_example/config.yaml, project_setup.py
+    output: dag.pdf
+    jobid: 8
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Thu Aug  7 22:12:47 2025]
+Finished jobid: 8 (Rule: make_dag)
+1 of 9 steps (11%) done
+[Thu Aug  7 22:12:47 2025]
+Finished jobid: 3 (Rule: simulate)
+2 of 9 steps (22%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Aug  7 22:12:47 2025]
+localrule shocks:
+    input: C:/Users/hms467/github/snakemake_example/dgp/simulate_baseline/output/sim_data.csv, C:/Users/hms467/github/snakemake_example/dgp/add_shocks/code/shocks_funcs.py
+    output: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv
+    jobid: 2
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Thu Aug  7 22:12:49 2025]
+Finished jobid: 2 (Rule: shocks)
+3 of 9 steps (33%) done
+Select jobs to execute...
+Execute 2 jobs...
+[Thu Aug  7 22:12:49 2025]
+localrule stata_analysis:
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/code/stata_analysis.do, C:/Users/hms467/github/snakemake_example/utils/ado_files/ado_example.ado
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+    jobid: 1
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Thu Aug  7 22:12:49 2025]
+localrule estimate:
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv
+    output: C:/Users/hms467/github/snakemake_example/analysis/estimate_model/output/estimates.txt
+    jobid: 7
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Thu Aug  7 22:12:51 2025]
+Finished jobid: 1 (Rule: stata_analysis)
+4 of 9 steps (44%) done
+Select jobs to execute...
+Execute 2 jobs...
+[Thu Aug  7 22:12:51 2025]
+localrule compile_md:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.md
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf
+    jobid: 4
+    reason: Forced execution
+    wildcards: folder=C:/Users/hms467/github/snakemake_example/analysis/stata_analysis, filename=stata_results_md
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Thu Aug  7 22:12:51 2025]
+localrule compile_tex:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.tex
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf
+    jobid: 5
+    reason: Forced execution
+    wildcards: folder=C:/Users/hms467/github/snakemake_example/analysis/stata_analysis, filename=stata_results_tex
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Thu Aug  7 22:12:55 2025]
+Finished jobid: 7 (Rule: estimate)
+5 of 9 steps (56%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Aug  7 22:12:55 2025]
+localrule tables:
+    input: C:/Users/hms467/github/snakemake_example/analysis/estimate_model/output/estimates.txt
+    output: C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt
+    jobid: 6
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Thu Aug  7 22:12:55 2025]
+Finished jobid: 5 (Rule: compile_tex)
+6 of 9 steps (67%) done
+[Thu Aug  7 22:12:57 2025]
+Finished jobid: 6 (Rule: tables)
+7 of 9 steps (78%) done
+[Thu Aug  7 22:12:59 2025]
+Finished jobid: 4 (Rule: compile_md)
+8 of 9 steps (89%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Aug  7 22:12:59 2025]
+localrule all:
+    input: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_md.pdf, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/stata_results_tex.pdf, C:/Users/hms467/github/snakemake_example/analysis/make_tables/output/final_tables.txt, dag.pdf
+    output: report.html
+    jobid: 0
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+[Thu Aug  7 22:13:02 2025]
+Finished jobid: 0 (Rule: all)
+9 of 9 steps (100%) done
+Complete log(s): C:\Users\hms467\github\snakemake_example\.snakemake\log\2025-08-07T221243.761157.snakemake.log

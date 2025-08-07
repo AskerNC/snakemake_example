@@ -10,18 +10,15 @@ clear all
 set more off
 
 
+include "`1'stata_analysis_locals.do"
 
-if missing(`"`1'"'){
-    * Not running through Snakemake, use default paths
-    include "stata_analysis_locals.do"
-}
 
-args logfile input_file output_file
+*args logfile input_file output_file
 
 log using "`logfile'", replace
 
 * Load CSV data
-import delimited "`input_file'", clear
+import delimited "`sim_data_shocked'", clear
 
 
 
@@ -32,7 +29,8 @@ describe
 
 summarize
 
-
+* ado example
+ado_example
 
 
 su
@@ -40,13 +38,13 @@ su
 
 * Create summary statistics table using estpost
 estpost summarize
-esttab using "`output_file'", replace ///
+esttab using "`stata_results'", replace ///
     cells("count(fmt(0)) mean(fmt(3)) sd(fmt(3)) min(fmt(3)) max(fmt(3))") ///
     label title("Summary Statistics") ///
     addnotes("Notes: This table shows descriptive statistics for all variables.") ///
     booktabs
 
-display "Summary statistics exported to: `output_file'"
+display "Summary statistics exported to: `stata_results'"
 
 
 cap log close

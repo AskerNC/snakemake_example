@@ -1,0 +1,63 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job               count
+--------------  -------
+stata_analysis        1
+total                 1
+
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Aug  7 22:10:36 2025]
+localrule stata_analysis:
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/code/stata_analysis.do, C:/Users/hms467/github/snakemake_example/utils/ado_files/ado_example.ado
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+    jobid: 0
+    reason: Forced execution
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+RuleException:
+SystemError in file "C:\Users\hms467\github\snakemake_example\rules\analysis.smk", line 30:
+
+. set more off
+
+. 
+. 
+. include "`1'stata_analysis_locals.do"
+
+. global logfile "C:\Users\hms467\github\snakemake_example\analysis\stata_analy
+> sis\logs\stata_analysis.log"
+
+. global _names "{'stata_results': (0, None)}"
+invalid syntax
+r(198);
+r(198);
+
+end of do-file
+
+r(198);
+
+  File "C:\Users\hms467\github\snakemake_example\rules\analysis.smk", line 30, in __rule_stata_analysis
+  File "C:\Users\hms467\github\snakemake_example\project_setup.py", line 394, in run_stata
+  File "C:\Program Files\Stata18/utilities\pystata\stata.py", line 313, in run
+  File "C:\Program Files\Stata18/utilities\pystata\stata.py", line 71, in _stata_wrk1
+[Thu Aug  7 22:10:38 2025]
+Error in rule stata_analysis:
+    message: None
+    jobid: 0
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/code/stata_analysis.do, C:/Users/hms467/github/snakemake_example/utils/ado_files/ado_example.ado
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look below for error messages
+[Thu Aug  7 22:10:38 2025]
+Error in rule stata_analysis:
+    message: None
+    jobid: 0
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/code/stata_analysis.do, C:/Users/hms467/github/snakemake_example/utils/ado_files/ado_example.ado
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+Complete log(s): C:\Users\hms467\github\snakemake_example\.snakemake\log\2025-08-07T221036.362411.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

@@ -1,6 +1,0 @@
-2025-07-27T17:08:05.263523+0200 INFO Snakemake object loaded for rule: shocks
-2025-07-27T17:08:05.265156+0200 INFO Test function in shocks_funcs.py called successfully.
-2025-07-27T17:08:05.292845+0200 INFO Applied shock with constant: 0.5
-2025-07-27T17:08:49.919975+0200 INFO Snakemake object loaded for rule: shocks
-2025-07-27T17:08:49.922071+0200 INFO Test function in shocks_funcs.py called successfully.
-2025-07-27T17:08:49.944666+0200 INFO Applied shock with constant: 0.5

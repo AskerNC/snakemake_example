@@ -3,11 +3,11 @@
        log:  C:\Users\hms467\github\snakemake_example\analysis\stata_analysis\l
 > ogs\stata_analysis.log
   log type:  text
- opened on:  27 Jul 2025, 19:17:08
+ opened on:   7 Aug 2025, 22:12:50
 
 . 
 . * Load CSV data
-. import delimited "`input_file'", clear
+. import delimited "`sim_data_shocked'", clear
 (encoding automatically selected: ISO-8859-1)
 (2 vars, 1,000 obs)
 
@@ -41,7 +41,10 @@ Sorted by:
            y |      1,000    1.008496    .2893427   .5005187   1.499422
 
 . 
-. 
+. * ado example
+. ado_example
+Hello
+
 . 
 . 
 . su
@@ -66,7 +69,7 @@ Sorted by:
            x |  .0012331   .9991047   497.1778 
            y |  .5005187   1.499422   1008.496 
 
-. esttab using "`output_file'", replace ///
+. esttab using "`stata_results'", replace ///
 >     cells("count(fmt(0)) mean(fmt(3)) sd(fmt(3)) min(fmt(3)) max(fmt(3))") //
 > /
 >     label title("Summary Statistics") ///
@@ -80,7 +83,7 @@ Sorted by:
 > ysis/output/stata_results.tex)
 
 . 
-. display "Summary statistics exported to: `output_file'"
+. display "Summary statistics exported to: `stata_results'"
 Summary statistics exported to: C:/Users/hms467/github/snakemake_example/analys
 > is/stata_analysis/output/stata_results.tex
 

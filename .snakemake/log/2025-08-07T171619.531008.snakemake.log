@@ -1,0 +1,43 @@
+Assuming unrestricted shared filesystem usage.
+None
+host: SAM1019135
+Building DAG of jobs...
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job               count
+--------------  -------
+stata_analysis        1
+total                 1
+
+Select jobs to execute...
+Execute 1 jobs...
+[Thu Aug  7 17:16:20 2025]
+localrule stata_analysis:
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/code/stata_analysis.do, C:/Users/hms467/github/snakemake_example/utils/ado_files/ado_example.ado
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+    jobid: 0
+    reason: Missing output files: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+    resources: tmpdir=C:\Users\hms467\AppData\Local\Temp
+RuleException:
+AttributeError in file "C:\Users\hms467\github\snakemake_example\rules\analysis.smk", line 30:
+'dict' object has no attribute 'split'
+  File "C:\Users\hms467\github\snakemake_example\rules\analysis.smk", line 30, in __rule_stata_analysis
+  File "C:\Users\hms467\github\snakemake_example\project_setup.py", line 384, in run_stata
+[Thu Aug  7 17:16:21 2025]
+Error in rule stata_analysis:
+    message: None
+    jobid: 0
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/code/stata_analysis.do, C:/Users/hms467/github/snakemake_example/utils/ado_files/ado_example.ado
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look below for error messages
+[Thu Aug  7 17:16:21 2025]
+Error in rule stata_analysis:
+    message: None
+    jobid: 0
+    input: C:/Users/hms467/github/snakemake_example/dgp/add_shocks/output/sim_data_shocked.csv, C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/code/stata_analysis.do, C:/Users/hms467/github/snakemake_example/utils/ado_files/ado_example.ado
+    output: C:/Users/hms467/github/snakemake_example/analysis/stata_analysis/output/stata_results.tex
+Complete log(s): C:\Users\hms467\github\snakemake_example\.snakemake\log\2025-08-07T171619.531008.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.
