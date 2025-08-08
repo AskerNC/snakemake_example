@@ -57,6 +57,8 @@ rule compile_tex:
     and try to run run this rule to create the pdf using everything in the output folder in the same folder as input
     '''
     wildcard_constraints:
+        # Ensure folder contains either 'analysis' or 'dgp' as a path segment (works on Windows and *nix)
+        folder=".*(?:^|[\\/])(analysis|dgp)(?:[\\/]|$).*",
         filename="[^/\\\\]+"  # Ensure filename doesn't contain / or \ (path separators)
     input:
         # Everything in the output directory of the folder
@@ -75,6 +77,8 @@ rule compile_tex:
 # General wildcard markdown md rule:
 rule compile_md:
     wildcard_constraints:
+        # Ensure folder contains either 'analysis' or 'dgp' as a path segment (works on Windows and *nix)
+        folder=".*(?:^|[\\/])(analysis|dgp)(?:[\\/]|$).*",
         filename="[^/\\\\]+"  # Ensure filename doesn't contain / or \ (path separators)
     input:
         project_setup.get_all_files_in_output,

@@ -1,5 +1,5 @@
-2025-07-27T19:17:05.429269+0200 INFO Snakemake object loaded for rule: simulate
-2025-07-27T19:17:05.435763+0200 INFO DataFrame:
+2025-08-08T17:33:59.896601+0200 INFO Snakemake object loaded for rule: simulate
+2025-08-08T17:33:59.914849+0200 INFO DataFrame:
             x         y
 0    0.773956  0.062063
 1    0.438878  0.458262
@@ -14,4 +14,4 @@
 999  0.280896  0.520072
 
 [1000 rows x 2 columns]
-2025-07-27T19:17:05.442749+0200 SUCCESS Simulate finished
+2025-08-08T17:33:59.924732+0200 SUCCESS Simulate finished
