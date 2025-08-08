@@ -358,7 +358,7 @@ def find_snakemake(rulename : str = '',caller_frame : None | FrameType = None ) 
 
 
 
-def run_stata(dofile, args={},logfilename='',ado_files: None|list|str = None) -> None:
+def run_stata(dofile, args={},logfilename='',ado_files: None|list|str = None,snakeobjects: list[None|dict] = [None]) -> None:
     import stata_setup
     stata_setup.config(r'C:\Program Files\Stata18/', 'mp')
     from pystata import stata # type: ignore
@@ -380,6 +380,10 @@ def run_stata(dofile, args={},logfilename='',ado_files: None|list|str = None) ->
 
     with open(locals_file, 'w') as f:
         f.write(f'local logfile "{logfile}"\n')
+
+        for snakeobject in snakeobjects:
+            if snakeobject is not None:
+                args.update(snakeobject.__dict__) 
 
         for key,value in args.items():
             f.write(f'local {key} "{value}"\n')
