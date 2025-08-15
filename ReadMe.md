@@ -211,7 +211,7 @@ This approach allows you to focus on content creation while snakemake handles th
 
 The entire system is designed to work seamlessly whether you're:
 
-1. **Running the full pipeline**: `snakemake -j4`
+1. **Running the full pipeline**: `snakemake -c4`
 2. **Testing individual components**: Running Python scripts interactively in VS Code/Jupyter
 3. **Debugging Stata code**: Running .do files directly in Stata
 
@@ -224,11 +224,11 @@ Activating the  a313_snake environment (or whathever the conda environment where
 `conda activate a313_snake`
 
 Running the snakerule called all (As I understand without a name you just run the first rule in the Snakefile):
-`snakemake -j4`
+`snakemake -c4`
 
 If you want to run the snakefile with a specific target rule, you can specify it like this:
 
-`snakemake -j4 <target_rule>`
+`snakemake <target_rule> -c4 `
 
 using option `-f` to force the rule to run and `-F` to force all the rule's dependencies to also run.
 
