@@ -10,7 +10,7 @@ from snakemake.rules import Rule
 from snakemake.api import (
     SnakemakeApi, OutputSettings, ResourceSettings, StorageSettings
 )
-from snakemake.io import _IOFile
+from snakemake.io import _IOFile, Wildcards, Resources, apply_wildcards
 
 def create_paths_and_files() -> tuple[SimpleNamespace, SimpleNamespace]:
     """
@@ -111,23 +111,31 @@ def add_pyfile(files: SimpleNamespace, name: str, foldername:str, namespacename:
     #setattr(files, f'{namespacename}_log', getattr(paths,f'{foldername}_logs') / f'{name}.log')
 
 
-def file_setup(rulename:str = '', log : bool =True) -> Rule:
+def file_setup(
+    rulename: str = '',
+    log: bool = True,
+    wildcards: dict | None = None,
+):
     """
     Set up the file for the given rule name. If no rule name is provided, it will use the stem of the current file.
     Also tries to activate the autoreload magic command in IPython if running in an interactive window.
     Args:
         rulename: The name of the rule to set up. If not provided, it defaults to the stem of the current file.
         log: Whether to set up logging for the rule. Defaults to True.
+        wildcards: Optional dict of concrete wildcard values. Required when the
+            rule's input/output use wildcards (e.g. compile_tex: pass
+            ``wildcards={'folder': 'analysis/foo', 'filename': 'bar'}``).
     Returns:
-        A Snakemake Rule object for the specified rule.
+        A Snakemake Rule object, or an _InteractiveSnakemake wrapper when
+        wildcards were supplied and the rule has wildcards.
     """
-    
+
     try_inter()
 
     # Find the snakemake object for the given rule name
     # Get the caller's frame to access their global variables
     caller_frame = inspect.currentframe().f_back
-    snakemake = find_snakemake(rulename, caller_frame=caller_frame)
+    snakemake = find_snakemake(rulename, caller_frame=caller_frame, wildcards=wildcards)
     
     if log:
         
@@ -285,15 +293,120 @@ def create_stata_paths() -> None:
                 f.write(f"global {attr} \"{getattr(paths, attr)}\"\n")
     return do_file
 
-def load_rule(rulename : str, snakefile : Path|str = Path('Snakefile'))-> Rule:
+class _InteractiveSnakemake:
+    """
+    A snakemake-like object built from a Rule + concrete wildcard values.
+    Mimics the namespace that scripts get when run via `snakemake` proper,
+    so interactive sessions can use snake.input.x / snake.output.y / etc.
+    """
+    def __init__(self, rule, input_, output, params, wildcards, log, config):
+        self.rule = rule.name
+        self.input = input_
+        self.output = output
+        self.params = params
+        self.wildcards = wildcards
+        self.log = log
+        self.threads = 1
+        self.resources = Resources(fromdict={"_cores": 1})
+        self.config = config
+
+        # rule.script may itself contain wildcards (e.g. "{folder}/code/foo.py").
+        # Expand it so file_setup's logging block can compute a real folder path.
+        script = getattr(rule, "script", None)
+        if script is not None:
+            try:
+                script_str = apply_wildcards(str(script), wildcards)
+            except Exception:
+                script_str = str(script)
+            self.script = Path(script_str)
+            self.scriptdir = self.script.parent
+        else:
+            # Shell-only rules don't normally call file_setup, but provide a
+            # sensible fallback so log=True doesn't crash. Project convention:
+            # "<folder>/code" sits next to "<folder>/logs".
+            folder = getattr(wildcards, "folder", None)
+            if folder is None and len(output) > 0:
+                folder = str(Path(str(output[0])).parent.parent)
+            self.scriptdir = Path(folder) / "code" if folder else Path(".")
+
+    def __str__(self):
+        return self.rule
+
+
+class _JobProxy:
+    """Stand-in for Job in Rule.expand_params — it only reads .resources / ._cores."""
+    @property
+    def resources(self):
+        return Resources(fromdict={"_cores": 1})
+
+
+def _required_wildcards(rule: Rule) -> set[str]:
+    required: set[str] = set()
+    for f in list(rule.output) + [g for g in rule.input if isinstance(g, _IOFile)]:
+        required.update(f.get_wildcard_names())
+    return required
+
+
+def _build_interactive_snakemake(
+    rule: Rule, wildcards: dict, config: dict
+) -> "_InteractiveSnakemake":
+    required = _required_wildcards(rule)
+    missing = required - set(wildcards)
+    if missing:
+        raise ValueError(
+            f"Rule '{rule.name}' needs wildcards {sorted(required)}; "
+            f"missing values for: {sorted(missing)}"
+        )
+    extra = set(wildcards) - required
+    if extra:
+        logger.warning(
+            f"Wildcards passed but not used by rule '{rule.name}': {sorted(extra)}"
+        )
+
+    input_, *_ = rule.expand_input(wildcards)
+    output, _ = rule.expand_output(wildcards)
+    log_ = rule.expand_log(wildcards)
+    try:
+        params, _ = rule.expand_params(
+            wildcards, input_, output, _JobProxy(), omit_callable=False
+        )
+    except Exception as e:
+        logger.warning(
+            f"Could not fully expand params for '{rule.name}': {e}. "
+            "Falling back to omit_callable=True."
+        )
+        params, _ = rule.expand_params(
+            wildcards, input_, output, _JobProxy(), omit_callable=True
+        )
+
+    return _InteractiveSnakemake(
+        rule=rule,
+        input_=input_,
+        output=output,
+        params=params,
+        wildcards=Wildcards(fromdict=wildcards),
+        log=log_,
+        config=config,
+    )
+
+
+def load_rule(
+    rulename: str,
+    snakefile: Path | str = Path('Snakefile'),
+    wildcards: dict | None = None,
+) -> Rule | _InteractiveSnakemake:
     """
     Load a Snakemake rule from the specified path.
-    
-    Args: 
+
+    Args:
         rulename: The name of the rule to load.
         snakefile: The path to the Snakefile. Defaults to 'Snakefile'.
-    """ 
-    
+        wildcards: Optional dict of concrete wildcard values. If provided and
+            the rule has wildcards, returns an _InteractiveSnakemake whose
+            input/output/params/wildcards are fully expanded. Expansion is
+            performed inside the SnakemakeApi context so the workflow stays
+            alive while Rule.expand_* methods walk back into rule.workflow.
+    """
     with SnakemakeApi(OutputSettings(verbose=False)) as smk_api:
         wf_api = smk_api.workflow(
             resource_settings=ResourceSettings(cores=1),
@@ -302,58 +415,82 @@ def load_rule(rulename : str, snakefile : Path|str = Path('Snakefile'))-> Rule:
         )
 
         #get the underlying Workflow object (lazy-loaded)
-        wf = wf_api._workflow 
+        wf = wf_api._workflow
 
-    # Find rule by name
-    for rule in wf.rules:
-        if rule.name == rulename:
-            return rule
-        
+        for rule in wf.rules:
+            if rule.name == rulename:
+                if wildcards is None:
+                    return rule
+                return _build_interactive_snakemake(rule, wildcards, dict(wf.config))
+
     raise ValueError(f"Rule '{rulename}' not found in the Snakefile at {snakefile}.")
 
-def find_snakemake(rulename : str = '',caller_frame : None | FrameType = None ) -> Rule:
+def find_snakemake(
+    rulename: str = '',
+    caller_frame: None | FrameType = None,
+    wildcards: dict | None = None,
+) -> Rule | _InteractiveSnakemake:
     '''
     Find snakemake rule configuration. If not run through snakemake,
-    (so for example running this script directly in interactive mode), 
+    (so for example running this script directly in interactive mode),
     it will load the configuration from the snakefile in the root folder.
     Args:
         rulename: The name of the rule to find. If not provided, it defaults to the stem of the current file.
         caller_frame: The frame of the caller, used to check if snakemake is already defined.
             It is useful when this function is called from another function that is not defined in main running script.
             As this is the place where it finds globals from.
+        wildcards: Optional dict of concrete wildcard values for rules that
+            use wildcards. Required when the rule has wildcards; ignored when
+            running through snakemake itself (the injected object wins).
     Returns:
-        A Snakemake Rule object for the specified rule.
+        A Snakemake Rule object, or an _InteractiveSnakemake wrapper when
+        wildcards were supplied and the rule has wildcards.
     '''
-    
+
     if caller_frame is None:
         # Get the caller's frame to access their global variables
         caller_frame = inspect.currentframe().f_back
     caller_globals = caller_frame.f_globals
-    
+
     print("Checking for snakemake object...")
-    
+
     # When snakemake runs a script, it injects the snakemake object directly
     # into the script's global namespace
-    try: 
+    try:
         snakemake_obj = caller_globals['snakemake']
         print("Snakemake object found in globals")
+        return snakemake_obj
     except (KeyError):
         print('Snakemake object not found or invalid, loading from snakefile')
-        # If snakemake object not found, load from snakefile
-        # Determine the rule name
-        if rulename == '':
-            # Get the caller's filename to derive the rulename
-            # This generally doesn't work as it often results in project_setup or ipython obejct
-            caller_file = caller_frame.f_code.co_filename
-            rulename = Path(caller_file).stem
-            print(f'Derived rulename from file: {rulename}')
-        
-        paths = find_paths()
-        
-        # Find snakemake configuration
-        snakemake_obj = load_rule(rulename, snakefile=paths.root / "Snakefile")
-        print(f'Loaded rule {rulename} from snakefile')
-    
+
+    # If snakemake object not found, load from snakefile
+    # Determine the rule name
+    if rulename == '':
+        # Get the caller's filename to derive the rulename
+        # This generally doesn't work as it often results in project_setup or ipython obejct
+        caller_file = caller_frame.f_code.co_filename
+        rulename = Path(caller_file).stem
+        print(f'Derived rulename from file: {rulename}')
+
+    paths = find_paths()
+
+    # Find snakemake configuration
+    snakemake_obj = load_rule(
+        rulename, snakefile=paths.root / "Snakefile", wildcards=wildcards
+    )
+    print(f'Loaded rule {rulename} from snakefile')
+
+    # If the user did not supply wildcards but the rule has some, fail loudly
+    # rather than returning unexpanded "{folder}/..." strings.
+    if wildcards is None and isinstance(snakemake_obj, Rule):
+        required = _required_wildcards(snakemake_obj)
+        if required:
+            raise ValueError(
+                f"Rule '{rulename}' has wildcards {sorted(required)}. "
+                f"Pass file_setup(rulename='{rulename}', "
+                f"wildcards={{{', '.join(repr(w) + ': ...' for w in sorted(required))}}})."
+            )
+
     return snakemake_obj
 
 
